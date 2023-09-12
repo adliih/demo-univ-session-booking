@@ -15,6 +15,7 @@ Authentication is required for accessing session listings and making bookings. A
   - [Overview](#overview)
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
+  - [Prisma Studio](#prisma-studio)
   - [Authentication](#authentication)
   - [GraphQL Queries](#graphql-queries)
     - [Session Listing](#session-listing)
@@ -51,6 +52,15 @@ To set up the Redwood.js backend, follow these steps:
    yarn rw dev api
    ```
 6. GraphQL Playground is accessible at http://localhost:8911/graphql
+
+## Prisma Studio
+Prisma studio is a tool to see your data that were used by prisma. To see it, follow these steps:
+
+1. Run prisma studio
+    ```bash
+    yarn rw prisma studio
+    ```
+2. Prisma Studio is accessible at http://localhost:5555/
 
 ## Authentication
 
