@@ -1,122 +1,163 @@
-# README
+# Redwood.js Backend API for Univ Sessions
 
-Welcome to [RedwoodJS](https://redwoodjs.com)!
+## Overview
 
-> **Prerequisites**
->
-> - Redwood requires [Node.js](https://nodejs.org/en/) (=18.x) and [Yarn](https://yarnpkg.com/) (>=1.15)
-> - Are you on Windows? For best results, follow our [Windows development setup](https://redwoodjs.com/docs/how-to/windows-development-setup) guide
+This backend API is built using Redwood.js and GraphQL, providing a flexible foundation for managing student and dean sessions. The system supports multiple types of users, specifically Students and Deans, with distinct permissions for session visibility and booking.
 
-Start by installing dependencies:
+- Students can only view free Dean sessions.
+- Deans have the authority to view both free and pending sessions.
 
-```
-yarn install
-```
+Authentication is required for accessing session listings and making bookings. A mutation for login is available to retrieve the bearer token for authenticated requests.
 
-Then start the development server:
+## Table of Contents
 
-```
-yarn redwood dev
-```
+- [Redwood.js Backend API for Univ Sessions](#redwoodjs-backend-api-for-univ-sessions)
+  - [Overview](#overview)
+  - [Table of Contents](#table-of-contents)
+  - [Installation](#installation)
+  - [Authentication](#authentication)
+  - [GraphQL Queries](#graphql-queries)
+    - [Session Listing](#session-listing)
+      - [Query](#query)
+      - [Variables](#variables)
+      - [Response](#response)
+    - [Session Booking](#session-booking)
+      - [Mutation](#mutation)
+      - [Variables](#variables-1)
+      - [Response](#response-1)
+  - [Usage](#usage)
 
-Your browser should automatically open to [http://localhost:8910](http://localhost:8910) where you'll see the Welcome Page, which links out to many great resources.
+## Installation
 
-> **The Redwood CLI**
->
-> Congratulations on running your first Redwood CLI command! From dev to deploy, the CLI is with you the whole way. And there's quite a few commands at your disposal:
->
-> ```
-> yarn redwood --help
-> ```
->
-> For all the details, see the [CLI reference](https://redwoodjs.com/docs/cli-commands).
+To set up the Redwood.js backend, follow these steps:
 
-## Prisma and the database
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/backend-api.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd backend-api
+   ```
+3. Install dependencies:
+   ```bash
+   yarn install
+   ```
+4. Configure environment variables for authentication and database access.
+5. Run the project
+   ```bash
+   yarn rw dev
+   # or run api only
+   yarn rw dev api
+   ```
+6. GraphQL Playground is accessible at http://localhost:8911/graphql
 
-Redwood wouldn't be a full-stack framework without a database. It all starts with the schema. Open the [`schema.prisma`](api/db/schema.prisma) file in `api/db` and replace the `UserExample` model with the following `Post` model:
+## Authentication
 
-```prisma
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  body      String
-  createdAt DateTime @default(now())
+For authentication, use the provided mutation for login to retrieve the bearer token. This token is required for accessing protected endpoints.
+
+```graphql
+mutation Login($email: String!, $password: String!) {
+  login(email: $email, password: $password) {
+    token
+  }
 }
 ```
 
-Redwood uses [Prisma](https://www.prisma.io/), a next-gen Node.js and TypeScript ORM, to talk to the database. Prisma's schema offers a declarative way of defining your app's data models. And Prisma [Migrate](https://www.prisma.io/migrate) uses that schema to make database migrations hassle-free:
+## GraphQL Queries
 
-```
-yarn rw prisma migrate dev
+### Session Listing
 
-# ...
-
-? Enter a name for the new migration: › create posts
-```
-
-> `rw` is short for `redwood`
-
-You'll be prompted for the name of your migration. `create posts` will do.
-
-Now let's generate everything we need to perform all the CRUD (Create, Retrieve, Update, Delete) actions on our `Post` model:
-
-```
-yarn redwood generate scaffold post
+#### Query
+```graphql
+query ListSessions($status: String, $startDate: Date, $endDate: Date) {
+  sessions(status: $status, startDate: $startDate, endDate: $endDate) {
+    id
+    title
+    date
+    time
+    status
+  }
+}
 ```
 
-Navigate to [http://localhost:8910/posts/new](http://localhost:8910/posts/new), fill in the title and body, and click "Save".
-
-Did we just create a post in the database? Yup! With `yarn rw generate scaffold <model>`, Redwood created all the pages, components, and services necessary to perform all CRUD actions on our posts table.
-
-## Frontend first with Storybook
-
-Don't know what your data models look like? That's more than ok—Redwood integrates Storybook so that you can work on design without worrying about data. Mockup, build, and verify your React components, even in complete isolation from the backend:
-
+#### Variables
+```json
+{
+  "status": "free",
+  "startDate": "2023-09-15",
+  "endDate": "2023-09-16"
+}
 ```
-yarn rw storybook
-```
+```json
 
-Seeing "Couldn't find any stories"? That's because you need a `*.stories.{tsx,jsx}` file. The Redwood CLI makes getting one easy enough—try generating a [Cell](https://redwoodjs.com/docs/cells), Redwood's data-fetching abstraction:
-
-```
-yarn rw generate cell examplePosts
-```
-
-The Storybook server should hot reload and now you'll have four stories to work with. They'll probably look a little bland since there's no styling. See if the Redwood CLI's `setup ui` command has your favorite styling library:
-
-```
-yarn rw setup ui --help
+{
+  "status": "free",
+  "startDate": "2023-09-15",
+  "endDate": "2023-09-16"
+}
 ```
 
-## Testing with Jest
-
-It'd be hard to scale from side project to startup without a few tests. Redwood fully integrates Jest with both the front- and back-ends, and makes it easy to keep your whole app covered by generating test files with all your components and services:
-
+#### Response
+```json
+{
+  "data": {
+    "sessions": [
+      {
+        "id": 1,
+        "title": "Session Title",
+        "date": "2023-09-15",
+        "time": "10:00",
+        "status": "free"
+      },
+      {
+        "id": 2,
+        "title": "Another Session",
+        "date": "2023-09-16",
+        "time": "11:00",
+        "status": "free"
+      }
+    ]
+  }
+}
 ```
-yarn rw test
+
+### Session Booking
+
+#### Mutation
+```graphql
+mutation BookSession($sessionId: Int!) {
+  bookSession(sessionId: $sessionId) {
+    success
+    message
+  }
+}
 ```
 
-To make the integration even more seamless, Redwood augments Jest with database [scenarios](https://redwoodjs.com/docs/testing#scenarios)  and [GraphQL mocking](https://redwoodjs.com/docs/testing#mocking-graphql-calls).
-
-## Ship it
-
-Redwood is designed for both serverless deploy targets like Netlify and Vercel and serverful deploy targets like Render and AWS:
-
-```
-yarn rw setup deploy --help
+#### Variables
+```json
+{
+  "sessionId": 1
+}
 ```
 
-Don't go live without auth! Lock down your app with Redwood's built-in, database-backed authentication system ([dbAuth](https://redwoodjs.com/docs/authentication#self-hosted-auth-installation-and-setup)), or integrate with nearly a dozen third-party auth providers:
-
+#### Response
+```json
+{
+  "data": {
+    "bookSession": {
+      "success": true,
+      "message": "Session booked successfully."
+    }
+  }
+}
 ```
-yarn rw setup auth --help
-```
 
-## Next Steps
+## Usage
 
-The best way to learn Redwood is by going through the comprehensive [tutorial](https://redwoodjs.com/docs/tutorial/foreword) and joining the community (via the [Discourse forum](https://community.redwoodjs.com) or the [Discord server](https://discord.gg/redwoodjs)).
+1. Start the Redwood.js server:
+   ```bash
+   yarn rw dev
+   ```
 
-## Quick Links
-
-- Stay updated: read [Forum announcements](https://community.redwoodjs.com/c/announcements/5), follow us on [Twitter](https://twitter.com/redwoodjs), and subscribe to the [newsletter](https://redwoodjs.com/newsletter)
-- [Learn how to contribute](https://redwoodjs.com/docs/contributing)
+2. Make GraphQL queries and mutations using your preferred client, ensuring authentication headers are included for protected routes.
