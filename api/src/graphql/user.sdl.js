@@ -5,9 +5,4 @@ export const schema = gql`
     universityUserId: String!
     roles: Role!
   }
-
-  type Role {
-    id: ID!
-    type: String!
-  }
 `
