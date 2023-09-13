@@ -17,6 +17,7 @@ Authentication is required for accessing session listings and making bookings. A
   - [Installation](#installation)
   - [Prisma Studio](#prisma-studio)
   - [Authentication](#authentication)
+  - [GraphQL Types](#graphql-types)
   - [GraphQL Queries](#graphql-queries)
     - [Session Listing](#session-listing)
       - [Query](#query)
@@ -73,6 +74,20 @@ mutation Login($email: String!, $password: String!) {
   }
 }
 ```
+
+## GraphQL Types
+To use the generated graphql types, please follow these steps:
+1. Generate the types
+    ```bash
+    yarn rw g types
+    ```
+2. Import the types from `types/graphql`
+    ```ts
+    import type { MutationResolvers, QueryResolvers } from 'types/graphql'
+
+    export const availableSessions: QueryResolvers['availableSessions'] = () => {}
+    ```
+
 
 ## GraphQL Queries
 

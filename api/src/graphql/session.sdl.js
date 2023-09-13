@@ -6,25 +6,30 @@ export const schema = gql`
     status: String!
   }
 
-  type BookedSession implements Session {
-    id: Int!
+  type AvailableSession implements Session {
+    title: String
+    date: Date!
+    time: String!
     status: String!
   }
 
-  type BookSesionResult {
-    success: Boolean!
-    session: Session
+  type BookedSession implements Session {
+    id: Int!
+    title: String
+    date: Date!
+    time: String!
+    status: String!
   }
 
   type Query {
-    availableSessions(startDate: Date!, endDate: Date!): [Session]!
+    availableSessions(startDate: Date!, endDate: Date!): [AvailableSession]!
       @requireAuth(roles: ["student", "dean"])
-    sessions(startDate: Date!, endDate: Date!): [BookedSession]!
+    sessions(startDate: Date!, endDate: Date!): [Session]!
       @requireAuth(roles: ["dean"])
   }
 
   type Mutation {
-    bookSession(date: String!, time: String!): BookSesionResult
+    bookSession(date: Date!, time: String!): BookedSession
       @requireAuth(roles: ["student"])
   }
 `
