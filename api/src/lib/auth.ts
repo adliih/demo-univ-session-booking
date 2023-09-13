@@ -1,7 +1,7 @@
 import { hashSync } from 'bcrypt'
 import { JWTPayload, SignJWT, jwtVerify } from 'jose'
 
-import { parseJWT, Decoded } from '@redwoodjs/api'
+import { parseJWT, Decoded, Decoder } from '@redwoodjs/api'
 import { AuthenticationError, ForbiddenError } from '@redwoodjs/graphql-server'
 
 /**
@@ -14,10 +14,10 @@ const secret = new TextEncoder().encode(process.env.JWT_SECRET)
 const saltRound = 10
 const alg = 'HS256'
 
-export const authDecoder = async (token: string) => {
-  const decoded = await jwtVerify(token, secret)
+export const authDecoder: Decoder = async (token: string) => {
+  const { payload } = await jwtVerify(token, secret)
 
-  return { ...decoded }
+  return { ...payload }
 }
 
 export const hash = (plain: string) => {

@@ -23,7 +23,8 @@ export const login: MutationResolvers['login'] = async (args: {
     throw new Error('Invalid password')
   }
 
-  const token = await sign({ id: user.id, sub: `${user.id}` })
+  const roles = user.roles.map((role) => role.type)
+  const token = await sign({ id: user.id, sub: `${user.id}`, roles })
 
   await db.userToken.create({ data: { token, userId: user.id } })
 
