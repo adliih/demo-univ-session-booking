@@ -1,8 +1,8 @@
 export const schema = gql`
   type User {
-    id: ID!
+    id: Int!
     name: String
     universityUserId: String!
-    roles: Role!
+    roles: [Role]!
   }
 `

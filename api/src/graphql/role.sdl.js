@@ -1,6 +1,6 @@
 export const schema = gql`
   type Role {
-    id: ID!
+    id: Int!
     type: String!
   }
 `

@@ -1,9 +1,10 @@
 import { compare } from 'bcrypt'
+import type { MutationResolvers } from 'types/graphql'
 
 import { sign } from 'src/lib/auth'
 import { db } from 'src/lib/db'
 
-export const login = async (args: {
+export const login: MutationResolvers['login'] = async (args: {
   universityUserId: string
   password: string
 }) => {
