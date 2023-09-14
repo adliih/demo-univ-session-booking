@@ -27,6 +27,15 @@ export default async () => {
         },
       },
       {
+        universityUserId: 'student-b',
+        hashedPassword: hashSync('student-b', 10),
+        roles: {
+          connect: {
+            type: 'student',
+          },
+        },
+      },
+      {
         universityUserId: 'dean-a',
         hashedPassword: hashSync('dean-a', 10),
         roles: {
