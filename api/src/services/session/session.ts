@@ -62,7 +62,8 @@ export const bookSession: MutationResolvers['bookSession'] = async (args) => {
 export const Session: SessionRelationResolvers = {
   studentUser: (_args, { root }) =>
     ifAuthorized(root.studentUserId === context.currentUser.id)(
-      db.user.findFirst({ where: { id: root.studentUserId } })
+      root.studentUserId &&
+        db.user.findFirst({ where: { id: root.studentUserId } })
     ),
   studentUserId: (_args, { root }) =>
     ifAuthorized(root.studentUserId === context.currentUser.id)(
