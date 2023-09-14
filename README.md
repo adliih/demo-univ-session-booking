@@ -28,6 +28,7 @@ Authentication is required for accessing session listings and making bookings. A
       - [Variables](#variables-1)
       - [Response](#response-1)
   - [Usage](#usage)
+  - [Insomnia Document](#insomnia-document)
 
 ## Installation
 
@@ -75,6 +76,12 @@ mutation Login($email: String!, $password: String!) {
 }
 ```
 
+After that you can add additional headers, we need to have both `Auth-Provider: custom` and `Authorization` header to make it works
+```txt
+Auth-Provider: custom
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6Miwic3ViIjoiMiIsInJvbGVzIjpbInN0dWRlbnQiXSwiaWF0IjoxNjk0NjgzMjI1LCJleHAiOjE2OTQ2OTA0MjV9.qgo12-D4ouoa5ZDK0_ge8Gmx9Sxegbe0yUYDl6djJIo
+```
+
 ## GraphQL Types
 To use the generated graphql types, please follow these steps:
 1. Generate the types
@@ -95,13 +102,17 @@ To use the generated graphql types, please follow these steps:
 
 #### Query
 ```graphql
-query ListSessions($status: String, $startDate: Date, $endDate: Date) {
-  sessions(status: $status, startDate: $startDate, endDate: $endDate) {
-    id
+query sessions($startDate: Date!, $endDate: Date!) {
+  sessions(endDate: $endDate, startDate: $startDate) {
     title
     date
     time
     status
+	  id
+    studentUserId
+    studentUser{id name universityUserId roles {id type}}
+		deanUser {id name universityUserId}
+		deanUserId
   }
 }
 ```
@@ -109,41 +120,89 @@ query ListSessions($status: String, $startDate: Date, $endDate: Date) {
 #### Variables
 ```json
 {
-  "status": "free",
-  "startDate": "2023-09-15",
-  "endDate": "2023-09-16"
-}
-```
-```json
-
-{
-  "status": "free",
-  "startDate": "2023-09-15",
-  "endDate": "2023-09-16"
+	"startDate": "2023-09-11",
+	"endDate": "2023-09-18"
 }
 ```
 
 #### Response
 ```json
 {
-  "data": {
-    "sessions": [
-      {
-        "id": 1,
-        "title": "Session Title",
-        "date": "2023-09-15",
-        "time": "10:00",
-        "status": "free"
-      },
-      {
-        "id": 2,
-        "title": "Another Session",
-        "date": "2023-09-16",
-        "time": "11:00",
-        "status": "free"
-      }
-    ]
-  }
+	"data": {
+		"sessions": [
+			{
+				"title": null,
+				"date": "2023-09-14",
+				"time": "10:00",
+				"status": "booked",
+				"id": 2,
+				"deanUserId": 3,
+				"studentUserId": 2,
+				"deanUser": {
+					"id": 3,
+					"name": null,
+					"universityUserId": "dean-a"
+				},
+				"studentUser": {
+					"id": 2,
+					"name": null,
+					"universityUserId": "student-a",
+					"roles": [
+						{
+							"id": 2,
+							"type": "student"
+						}
+					]
+				}
+			},
+			{
+				"title": null,
+				"date": "2023-09-14",
+				"time": "10:00",
+				"status": "free",
+				"id": null,
+				"deanUserId": 4,
+				"studentUserId": null,
+				"studentUser": null,
+				"deanUser": {
+					"id": 4,
+					"name": null,
+					"universityUserId": "dean-b"
+				}
+			},
+			{
+				"title": null,
+				"date": "2023-09-15",
+				"time": "10:00",
+				"status": "booked",
+				"id": 3,
+				"deanUserId": 3,
+				"studentUserId": null,
+				"studentUser": null,
+				"deanUser": {
+					"id": 3,
+					"name": null,
+					"universityUserId": "dean-a"
+				}
+			},
+			{
+				"title": null,
+				"date": "2023-09-15",
+				"time": "10:00",
+				"status": "free",
+				"id": null,
+				"deanUserId": 4,
+				"studentUserId": null,
+				"studentUser": null,
+				"deanUser": {
+					"id": 4,
+					"name": null,
+					"universityUserId": "dean-b"
+				}
+			}
+		]
+	},
+	"extensions": {}
 }
 ```
 
@@ -151,10 +210,13 @@ query ListSessions($status: String, $startDate: Date, $endDate: Date) {
 
 #### Mutation
 ```graphql
-mutation BookSession($sessionId: Int!) {
-  bookSession(sessionId: $sessionId) {
-    success
-    message
+mutation bookSession($date: Date!, $time:String!, $deanUserId: Int!) {
+  bookSession(date: $date, time: $time, deanUserId: $deanUserId) {
+    date
+    id
+    status
+    time
+    title
   }
 }
 ```
@@ -162,19 +224,25 @@ mutation BookSession($sessionId: Int!) {
 #### Variables
 ```json
 {
-  "sessionId": 1
+	"date": "2023-09-14",
+	"time": "10:00",
+	"deanUserId": 3
 }
 ```
 
 #### Response
 ```json
 {
-  "data": {
-    "bookSession": {
-      "success": true,
-      "message": "Session booked successfully."
-    }
-  }
+	"data": {
+		"bookSession": {
+			"date": "2023-09-14",
+			"id": 2,
+			"status": "booked",
+			"time": "10:00",
+			"title": null
+		}
+	},
+	"extensions": {}
 }
 ```
 
@@ -186,3 +254,7 @@ mutation BookSession($sessionId: Int!) {
    ```
 
 2. Make GraphQL queries and mutations using your preferred client, ensuring authentication headers are included for protected routes.
+
+## Insomnia Document
+
+The sample of this API Doc can be found on [insomnia.json](insomnia.json). You can download the app [here](https://insomnia.rest/)
