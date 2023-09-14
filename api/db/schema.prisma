@@ -37,10 +37,11 @@ model Session {
   id            Int     @id @default(autoincrement())
   title         String?
   date          String
-  time          String
+  startTime     String
+  endTime       String
   status        String
   studentUser   User?   @relation("StudentUserSessions", map: "StudentUserSessions", fields: [studentUserId], references: [id])
   studentUserId Int?
-  deanUser      User?   @relation("DeanUserSessions", map: "DeanUserSessions", fields: [studentUserId], references: [id])
+  deanUser      User?   @relation("DeanUserSessions", map: "DeanUserSessions", fields: [deanUserId], references: [id])
   deanUserId    Int?
 }

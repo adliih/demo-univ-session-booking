@@ -35,7 +35,7 @@ export const sessions: QueryResolvers['sessions'] = async (args) => {
 }
 
 export const bookSession: MutationResolvers['bookSession'] = async (args) => {
-  const { time, deanUserId } = args
+  const { startTime, endTime, deanUserId } = args
   const date = format(args.date as Date, config.format)
   const { id: studentUserId } = context.currentUser
 
@@ -46,7 +46,8 @@ export const bookSession: MutationResolvers['bookSession'] = async (args) => {
 
   const isSlotAlreadyBooked = await db.session.count({
     where: {
-      time,
+      startTime,
+      endTime,
       date,
       deanUserId,
       status: 'booked',
@@ -60,7 +61,8 @@ export const bookSession: MutationResolvers['bookSession'] = async (args) => {
   const session = await db.session.create({
     data: {
       date,
-      time,
+      startTime,
+      endTime,
       deanUserId,
       status: 'booked',
       studentUserId,

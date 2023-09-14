@@ -34,14 +34,17 @@ const toSession = (
   date: string,
   deanUserId: number
 ) => {
-  return config.deanAvailableTimesOfDay.map((time) => {
+  return config.deanAvailableTimesOfDay.map(({ startTime, endTime }) => {
     const bookedSession = bookedSessions.find(
       (session) =>
         session.date === date &&
-        session.time === time &&
+        session.startTime === startTime &&
+        session.endTime === endTime &&
         session.deanUserId === deanUserId
     )
 
-    return bookedSession || { date, time, status: 'free', deanUserId }
+    return (
+      bookedSession || { date, startTime, endTime, status: 'free', deanUserId }
+    )
   })
 }

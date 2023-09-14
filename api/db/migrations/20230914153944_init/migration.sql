@@ -30,7 +30,8 @@ CREATE TABLE "Session" (
     "id" SERIAL NOT NULL,
     "title" TEXT,
     "date" TEXT NOT NULL,
-    "time" TEXT NOT NULL,
+    "startTime" TEXT NOT NULL,
+    "endTime" TEXT NOT NULL,
     "status" TEXT NOT NULL,
     "studentUserId" INTEGER,
     "deanUserId" INTEGER,
@@ -63,7 +64,7 @@ ALTER TABLE "UserToken" ADD CONSTRAINT "UserToken_userId_fkey" FOREIGN KEY ("use
 ALTER TABLE "Session" ADD CONSTRAINT "StudentUserSessions" FOREIGN KEY ("studentUserId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Session" ADD CONSTRAINT "DeanUserSessions" FOREIGN KEY ("studentUserId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Session" ADD CONSTRAINT "DeanUserSessions" FOREIGN KEY ("deanUserId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_RoleToUser" ADD CONSTRAINT "_RoleToUser_A_fkey" FOREIGN KEY ("A") REFERENCES "Role"("id") ON DELETE CASCADE ON UPDATE CASCADE;
