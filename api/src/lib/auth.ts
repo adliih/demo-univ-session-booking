@@ -17,7 +17,10 @@ const secret = new TextEncoder().encode(process.env.JWT_SECRET)
 const saltRound = 10
 const alg = 'HS256'
 
-export const authDecoder: Decoder = async (token: string) => {
+export const authDecoder: Decoder = async (token: string, type: string) => {
+  if (type !== 'jwt') {
+    return
+  }
   const { payload } = await jwtVerify(token, secret)
 
   return { ...payload }

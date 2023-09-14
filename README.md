@@ -76,9 +76,9 @@ mutation Login($email: String!, $password: String!) {
 }
 ```
 
-After that you can add additional headers, we need to have both `Auth-Provider: custom` and `Authorization` header to make it works
+After that you can add additional headers, we need to have both `Auth-Provider: jwt` and `Authorization` header to make it works
 ```txt
-Auth-Provider: custom
+Auth-Provider: jwt
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6Miwic3ViIjoiMiIsInJvbGVzIjpbInN0dWRlbnQiXSwiaWF0IjoxNjk0NjgzMjI1LCJleHAiOjE2OTQ2OTA0MjV9.qgo12-D4ouoa5ZDK0_ge8Gmx9Sxegbe0yUYDl6djJIo
 ```
 
