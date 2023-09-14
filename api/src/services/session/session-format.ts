@@ -19,6 +19,7 @@ export const constructSessions = (
       .flatMap(({ date, deanUserId }) =>
         toSession(bookedSession, date, deanUserId)
       )
+      .sort(sortByDateTimeThenDean)
   )
 }
 
@@ -34,14 +35,50 @@ const toSession = (
   date: string,
   deanUserId: number
 ) => {
-  return config.deanAvailableTimesOfDay.map((time) => {
+  return config.deanAvailableTimesOfDay.map(({ startTime, endTime }) => {
     const bookedSession = bookedSessions.find(
       (session) =>
         session.date === date &&
-        session.time === time &&
+        session.startTime === startTime &&
+        session.endTime === endTime &&
         session.deanUserId === deanUserId
     )
 
-    return bookedSession || { date, time, status: 'free', deanUserId }
+    return (
+      bookedSession || { date, startTime, endTime, status: 'free', deanUserId }
+    )
   })
+}
+
+const sortByDateTimeThenDean = (
+  a: {
+    date: string
+    startTime: string
+    deanUserId: number
+  },
+  b: {
+    date: string
+    startTime: string
+    deanUserId: number
+  }
+) => {
+  if (a.date < b.date) {
+    return -1
+  } else if (a.date > b.date) {
+    return 1
+  }
+
+  if (a.startTime < a.startTime) {
+    return -1
+  } else if (a.startTime > b.startTime) {
+    return 1
+  }
+
+  if (a.deanUserId < b.deanUserId) {
+    return -1
+  } else if (a.deanUserId > b.deanUserId) {
+    return 1
+  }
+
+  return 0
 }

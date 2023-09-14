@@ -21,25 +21,29 @@ describe('session-format', () => {
       const expected: Partial<Session>[] = [
         {
           date: '2023-09-14',
-          time: '10:00',
+          startTime: '10:00',
+          endTime: '11:00',
           status: 'free',
           deanUserId: 1,
         },
         {
           date: '2023-09-14',
-          time: '10:00',
+          startTime: '10:00',
+          endTime: '11:00',
           status: 'free',
           deanUserId: 2,
         },
         {
           date: '2023-09-15',
-          time: '10:00',
+          startTime: '10:00',
+          endTime: '11:00',
           status: 'free',
           deanUserId: 1,
         },
         {
           date: '2023-09-15',
-          time: '10:00',
+          startTime: '10:00',
+          endTime: '11:00',
           status: 'free',
           deanUserId: 2,
         },
@@ -51,7 +55,8 @@ describe('session-format', () => {
       const bookedSessions = [
         {
           date: '2023-09-14',
-          time: '10:00',
+          startTime: '10:00',
+          endTime: '11:00',
           status: 'booked',
           deanUserId: 2,
           studentUserId: 1,
@@ -67,26 +72,30 @@ describe('session-format', () => {
       const expected: Partial<Session>[] = [
         {
           date: '2023-09-14',
-          time: '10:00',
+          startTime: '10:00',
+          endTime: '11:00',
           status: 'free',
           deanUserId: 1,
         },
         {
           date: '2023-09-14',
-          time: '10:00',
+          startTime: '10:00',
+          endTime: '11:00',
           status: 'booked',
           deanUserId: 2,
           studentUserId: 1,
         },
         {
           date: '2023-09-15',
-          time: '10:00',
+          startTime: '10:00',
+          endTime: '11:00',
           status: 'free',
           deanUserId: 1,
         },
         {
           date: '2023-09-15',
-          time: '10:00',
+          startTime: '10:00',
+          endTime: '11:00',
           status: 'free',
           deanUserId: 2,
         },
