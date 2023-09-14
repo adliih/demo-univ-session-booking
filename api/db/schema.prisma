@@ -1,6 +1,7 @@
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_PRISMA_URL") // uses connection pooling
+  directUrl = env("DATABASE_URL_NON_POOLING") // uses a direct connection
 }
 
 generator client {
@@ -38,8 +39,8 @@ model Session {
   date          String
   time          String
   status        String
-  studentUser   User?   @relation("StudentUserSessions", fields: [studentUserId], references: [id])
+  studentUser   User?   @relation("StudentUserSessions", map: "StudentUserSessions", fields: [studentUserId], references: [id])
   studentUserId Int?
-  deanUser      User?   @relation("DeanUserSessions", fields: [studentUserId], references: [id])
+  deanUser      User?   @relation("DeanUserSessions", map: "DeanUserSessions", fields: [studentUserId], references: [id])
   deanUserId    Int?
 }
