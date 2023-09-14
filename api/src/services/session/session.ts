@@ -39,6 +39,11 @@ export const bookSession: MutationResolvers['bookSession'] = async (args) => {
   const date = format(args.date as Date, config.format)
   const { id: studentUserId } = context.currentUser
 
+  // validate the deanUserId should be exist as user with dean role
+  await db.user.findFirstOrThrow({
+    where: { id: deanUserId, roles: { some: { type: 'dean' } } },
+  })
+
   const isSlotAlreadyBooked = await db.session.count({
     where: {
       time,
