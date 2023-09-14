@@ -7,6 +7,8 @@ export const schema = gql`
     id: Int
     studentUser: User
     studentUserId: Int
+    deanUser: User
+    deanUserId: Int
   }
 
   type Query {
@@ -14,7 +16,7 @@ export const schema = gql`
   }
 
   type Mutation {
-    bookSession(date: Date!, time: String!): Session
+    bookSession(date: Date!, time: String!, deanUserId: Int!): Session
       @requireAuth(roles: ["student"])
   }
 `

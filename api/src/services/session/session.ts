@@ -15,6 +15,10 @@ export const sessions: QueryResolvers['sessions'] = async (args) => {
   const endDate = args.endDate as Date
   const startDate = args.startDate as Date
 
+  const deans = await db.user.findMany({
+    where: { roles: { some: { type: 'dean' } } },
+  })
+
   const sessions = await db.session.findMany({
     where: {
       date: {
@@ -27,11 +31,11 @@ export const sessions: QueryResolvers['sessions'] = async (args) => {
     },
   })
 
-  return constructSessions(sessions, startDate, endDate)
+  return constructSessions(deans, sessions, startDate, endDate)
 }
 
 export const bookSession: MutationResolvers['bookSession'] = async (args) => {
-  const { time } = args
+  const { time, deanUserId } = args
   const date = format(args.date as Date, config.format)
   const { id: studentUserId } = context.currentUser
 
@@ -39,6 +43,7 @@ export const bookSession: MutationResolvers['bookSession'] = async (args) => {
     where: {
       time,
       date,
+      deanUserId,
       status: 'booked',
     },
   })
@@ -51,6 +56,7 @@ export const bookSession: MutationResolvers['bookSession'] = async (args) => {
     data: {
       date,
       time,
+      deanUserId,
       status: 'booked',
       studentUserId,
     },
@@ -69,4 +75,10 @@ export const Session: SessionRelationResolvers = {
     ifAuthorized(root.studentUserId === context.currentUser.id)(
       root.studentUserId
     ),
+  deanUser: (_args, { root }) => {
+    if (!root.deanUserId) {
+      return
+    }
+    return db.user.findFirst({ where: { id: root.deanUserId } })
+  },
 }

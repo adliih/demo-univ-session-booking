@@ -44,6 +44,15 @@ export default async () => {
           },
         },
       },
+      {
+        universityUserId: 'dean-b',
+        hashedPassword: hashSync('dean-b', 10),
+        roles: {
+          connect: {
+            type: 'dean',
+          },
+        },
+      },
     ]
     await Promise.all(userData.map((data) => db.user.create({ data })))
 

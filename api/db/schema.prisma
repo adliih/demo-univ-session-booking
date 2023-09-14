@@ -16,6 +16,7 @@ model User {
   tokens              UserToken[]
   roles               Role[]
   studentUserSessions Session[]   @relation("StudentUserSessions")
+  deanUserSessions    Session[]   @relation("DeanUserSessions")
 }
 
 model Role {
@@ -39,4 +40,6 @@ model Session {
   status        String
   studentUser   User?   @relation("StudentUserSessions", fields: [studentUserId], references: [id])
   studentUserId Int?
+  deanUser      User?   @relation("DeanUserSessions", fields: [studentUserId], references: [id])
+  deanUserId    Int?
 }

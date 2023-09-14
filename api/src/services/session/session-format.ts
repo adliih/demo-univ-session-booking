@@ -1,28 +1,47 @@
-import type { Session } from '@prisma/client'
+import type { Session, User } from '@prisma/client'
 import { eachDayOfInterval, format, getDay } from 'date-fns'
 
 import { config } from './config'
 
 export const constructSessions = (
+  deans: User[],
   bookedSession: Session[],
   startDate: Date,
   endDate: Date
 ) => {
-  const days = eachDayOfInterval({ start: startDate, end: endDate })
-    //only include dean available days of week
-    .filter((day) => config.deanAvailableDaysOfWeek.includes(getDay(day)))
-    // format the date object
-    .map((day) => format(day, config.format))
-
-  return days.flatMap((day) => toSession(bookedSession, day))
+  return (
+    eachDayOfInterval({ start: startDate, end: endDate })
+      //only include dean available days of week
+      .filter((day) => config.deanAvailableDaysOfWeek.includes(getDay(day)))
+      // format the date object
+      .map((day) => format(day, config.format))
+      .flatMap((day) => toSessionForEachDean(day, deans))
+      .flatMap(({ date, deanUserId }) =>
+        toSession(bookedSession, date, deanUserId)
+      )
+  )
 }
 
-const toSession = (bookedSessions: Session[], date: string) => {
+const toSessionForEachDean = (date: string, deans: User[]) => {
+  return deans.map((dean) => ({
+    date,
+    deanUserId: dean.id,
+  }))
+}
+
+const toSession = (
+  bookedSessions: Session[],
+  date: string,
+  deanUserId: number
+) => {
   return config.deanAvailableTimesOfDay.map((time) => {
     const bookedSession = bookedSessions.find(
-      (session) => session.date === date && session.time === time
+      (session) =>
+        session.date === date &&
+        session.time === time &&
+        session.deanUserId === deanUserId
     )
 
-    return bookedSession || { date, time, status: 'free' }
+    return bookedSession || { date, time, status: 'free', deanUserId }
   })
 }
