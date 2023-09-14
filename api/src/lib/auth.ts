@@ -35,6 +35,16 @@ export const sign = (payload: JWTPayload) => {
     .sign(secret)
 }
 
+export const ifAuthorized = (isAuthorized: boolean) => {
+  const isBypass = context.currentUser?.roles.includes('dean')
+  return (value: unknown, fallback = undefined) => {
+    if (isBypass || isAuthorized) {
+      return value
+    }
+    return fallback
+  }
+}
+
 /**
  * getCurrentUser returns the user information together with
  * an optional collection of roles used by requireAuth() to check
