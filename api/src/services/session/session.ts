@@ -16,7 +16,7 @@ export const sessions: QueryResolvers['sessions'] = async (args) => {
   const startDate = args.startDate as Date
 
   const deans = await db.user.findMany({
-    where: { roles: { some: { type: 'dean' } } },
+    where: { roles: { hasSome: ['dean'] } },
   })
 
   const sessions = await db.session.findMany({
@@ -41,7 +41,7 @@ export const bookSession: MutationResolvers['bookSession'] = async (args) => {
 
   // validate the deanUserId should be exist as user with dean role
   await db.user.findFirstOrThrow({
-    where: { id: deanUserId, roles: { some: { type: 'dean' } } },
+    where: { id: deanUserId, roles: { hasSome: ['dean'] } },
   })
 
   const isSlotAlreadyBooked = await db.session.count({

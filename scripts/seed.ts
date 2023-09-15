@@ -9,49 +9,26 @@ export default async () => {
     // Seeds automatically with `yarn rw prisma migrate dev` and `yarn rw prisma migrate reset`
     //
     //
-    const roleData: Prisma.RoleCreateArgs['data'][] = [
-      { type: 'student' },
-      { type: 'dean' },
-    ]
-
-    await Promise.all(roleData.map((data) => db.role.create({ data })))
-
     const userData: Prisma.UserCreateArgs['data'][] = [
       {
         universityUserId: 'student-a',
         hashedPassword: hashSync('student-a', 10),
-        roles: {
-          connect: {
-            type: 'student',
-          },
-        },
+        roles: ['student'],
       },
       {
         universityUserId: 'student-b',
         hashedPassword: hashSync('student-b', 10),
-        roles: {
-          connect: {
-            type: 'student',
-          },
-        },
+        roles: ['student'],
       },
       {
         universityUserId: 'dean-a',
         hashedPassword: hashSync('dean-a', 10),
-        roles: {
-          connect: {
-            type: 'dean',
-          },
-        },
+        roles: ['dean'],
       },
       {
         universityUserId: 'dean-b',
         hashedPassword: hashSync('dean-b', 10),
-        roles: {
-          connect: {
-            type: 'dean',
-          },
-        },
+        roles: ['dean'],
       },
     ]
     await Promise.all(userData.map((data) => db.user.create({ data })))

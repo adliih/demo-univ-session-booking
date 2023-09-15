@@ -12,7 +12,6 @@ export const login: MutationResolvers['login'] = async (args: {
 
   const user = await db.user.findUnique({
     where: { universityUserId },
-    include: { roles: true },
   })
   if (!user) {
     throw new Error('User not registered')
@@ -23,10 +22,11 @@ export const login: MutationResolvers['login'] = async (args: {
     throw new Error('Invalid password')
   }
 
-  const roles = user.roles.map((role) => role.type)
-  const token = await sign({ id: user.id, sub: `${user.id}`, roles })
-
-  await db.userToken.create({ data: { token, userId: user.id } })
+  const token = await sign({
+    id: user.id,
+    sub: `${user.id}`,
+    roles: user.roles,
+  })
 
   return { token, user }
 }

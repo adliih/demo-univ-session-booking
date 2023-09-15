@@ -3,6 +3,6 @@ export const schema = gql`
     id: Int!
     name: String
     universityUserId: String!
-    roles: [Role]!
+    roles: [String]!
   }
 `

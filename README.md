@@ -12,23 +12,23 @@ Authentication is required for accessing session listings and making bookings. A
 ## Table of Contents
 
 - [Redwood.js Backend API for Univ Sessions](#redwoodjs-backend-api-for-univ-sessions)
-  - [Overview](#overview)
-  - [Table of Contents](#table-of-contents)
-  - [Installation](#installation)
-  - [Prisma Studio](#prisma-studio)
-  - [Authentication](#authentication)
-  - [GraphQL Types](#graphql-types)
-  - [GraphQL Queries](#graphql-queries)
-    - [Session Listing](#session-listing)
-      - [Query](#query)
-      - [Variables](#variables)
-      - [Response](#response)
-    - [Session Booking](#session-booking)
-      - [Mutation](#mutation)
-      - [Variables](#variables-1)
-      - [Response](#response-1)
-  - [Usage](#usage)
-  - [Insomnia Document](#insomnia-document)
+	- [Overview](#overview)
+	- [Table of Contents](#table-of-contents)
+	- [Installation](#installation)
+	- [Prisma Studio](#prisma-studio)
+	- [Authentication](#authentication)
+	- [GraphQL Types](#graphql-types)
+	- [GraphQL Queries](#graphql-queries)
+		- [Session Listing](#session-listing)
+			- [Query](#query)
+			- [Variables](#variables)
+			- [Response](#response)
+		- [Session Booking](#session-booking)
+			- [Mutation](#mutation)
+			- [Variables](#variables-1)
+			- [Response](#response-1)
+	- [Usage](#usage)
+	- [Insomnia Document](#insomnia-document)
 
 ## Installation
 
@@ -110,7 +110,7 @@ query sessions($startDate: Date!, $endDate: Date!) {
     status
 	  id
     studentUserId
-    studentUser{id name universityUserId roles {id type}}
+    studentUser{id name universityUserId}
 		deanUser {id name universityUserId}
 		deanUserId
   }
@@ -146,13 +146,7 @@ query sessions($startDate: Date!, $endDate: Date!) {
 				"studentUser": {
 					"id": 2,
 					"name": null,
-					"universityUserId": "student-a",
-					"roles": [
-						{
-							"id": 2,
-							"type": "student"
-						}
-					]
+					"universityUserId": "student-a"
 				}
 			},
 			{
